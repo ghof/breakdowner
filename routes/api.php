@@ -13,5 +13,6 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
-Route::resource('breakdowns', BreakdownController::class)->only(['store', 'index']);
+Route::middleware('auth:api')->group(function () {
+    Route::resource('breakdowns', BreakdownController::class)->only(['store', 'index']);
+});
