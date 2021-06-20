@@ -6,8 +6,11 @@ list of time expressions, and returns a breakdown of the duration between the tw
 using the given time expressions. The application keep track of all the breakdowns
 executed. It also exposes Another endpoint to search these
 stored breakdowns by the input timestamps.
+
 # Requirements
+
 The project uses [Laravel framework](https://laravel.com/) and [Sail](https://laravel.com/docs/8.x/sail) that provides a Docker powered local development experience that is compatible with macOS, Windows (WSL2), and Linux. Other than Docker, no software or libraries are required to be installed on your local computer before using Breakdowner.
+
 # Installation 
 
 - Clone this project
@@ -20,7 +23,7 @@ cp .env.example .env
 - Run it with detached mode
 
 ```bash 
-docker-dompose up --build -d
+docker-compose up --build -d
 ./vendor/bin/sail -d
 ```
 - Run migrations and seeders.
@@ -64,7 +67,9 @@ you should send this access_token with all your requests to the API.
 ```bash 
 ./vendor/bin/sail test
 ```
+
 # Endpoints Samples
+
 - Perform Breakdown API
 ```bash 
 curl --request POST \
@@ -146,17 +151,22 @@ the response should look something like.
   }
 }
 ```
+
 # Notes
+
 [Macros pattern](https://tighten.co/blog/the-magic-of-laravel-macros/) was used for the main function witch breakdown the interval given a time expression. It's extending the Carbon library with 2 new functions:
 - breakdownDiffArray
 - breakdownDiffJson
 
 Check out [CarbonServiceProvider](https://github.com/ghof/breakdowner/blob/master/app/Providers/CarbonServiceProvider.php) for more details
+
 #DEMO
+
 The demo server can be found [here](http://149.202.41.71/).
 Feel free to contact me for demo server client ID and secret at ghofrane.benhmida@gmail.com. 
 
 #TODO
+
 - Implement CI/CD using github actions.
 - Setup production env.
 - Improve the docker files to make the use of apache/ nginx.
