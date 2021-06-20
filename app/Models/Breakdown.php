@@ -17,7 +17,7 @@ class Breakdown extends Model
 
     public function scopeWithinInterval($query, $start, $end)
     {
-        return $query->where('starts_at', '>=', Carbon::parse($start))->where('ends_at', '<=', Carbon::parse($end));
+        return $query->where('starts_at', '<=', Carbon::parse($start))->where('ends_at', '>=', Carbon::parse($end));
     }
 
     public function getBreakdownArrayAttribute()

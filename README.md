@@ -13,13 +13,15 @@ The project uses [Laravel framework](https://laravel.com/) and [Sail](https://la
 - Clone this project
 
 ```bash 
-git clone http://......
+git clone https://github.com/ghof/breakdowner.git
 cd breakdowner
+cp .env.example .env
 ```
 - Run it with detached mode
 
 ```bash 
-./vendor/bin/sail up -d
+docker-dompose up --build -d
+./vendor/bin/sail -d
 ```
 - Run migrations and seeders.
 seeders will create you a user with email: ghofrane@ekar.com and password=password.
@@ -62,18 +64,105 @@ you should send this access_token with all your requests to the API.
 ```bash 
 ./vendor/bin/sail test
 ```
-
+# Endpoints Samples
+- Perform Breakdown API
+```bash 
+curl --request POST \
+  --url http://localhost/api/breakdowns \
+  --header 'accept: application/json' \
+  --header 'authorization: Bearer YOUR_API_TOKEN_HERE' \
+  --header 'content-type: application/json' \
+  --data '{
+     "starts_at": "2021-01-01T00:00:00",
+     "ends_at": "2021-03-01T12:30:00",
+     "time_expression": "2m,m,d,2h"
+}'
+```
+the response should look something like.
+```json
+{
+  "data": {
+    "2m": 0,
+    "m": 1,
+    "d": 29,
+    "2h": 6.25
+  }
+}
+```
+- Breakdowns History List API
+```bash 
+curl --request GET \
+  --url 'http://localhost/api/breakdowns?starts_at=2021-01-01T00%3A00%3A00&ends_at=2021-03-01T12%3A30%3A00' \
+  --header 'accept: application/json' \
+  --header 'authorization: Bearer YOUR_TOKEN_HERE'
+```
+the response should look something like.
+```json
+{
+  "data": [
+    {
+      "starts_at": "2021-01-01 00:00:00",
+      "ends_at": "2021-03-01 12:30:00",
+      "time_expression": "2m,m,d,2h",
+      "breakdown_array": {
+        "2m": 0,
+        "m": 1,
+        "d": 29,
+        "2h": 6.25
+      }
+    }
+  ],
+  "links": {
+    "first": "http:\/\/localhost\/api\/breakdowns?page=1",
+    "last": "http:\/\/localhost\/api\/breakdowns?page=1",
+    "prev": null,
+    "next": null
+  },
+  "meta": {
+    "current_page": 1,
+    "from": 1,
+    "last_page": 1,
+    "links": [
+      {
+        "url": null,
+        "label": "&laquo; Previous",
+        "active": false
+      },
+      {
+        "url": "http:\/\/localhost\/api\/breakdowns?page=1",
+        "label": "1",
+        "active": true
+      },
+      {
+        "url": null,
+        "label": "Next &raquo;",
+        "active": false
+      }
+    ],
+    "path": "http:\/\/localhost\/api\/breakdowns",
+    "per_page": 15,
+    "to": 1,
+    "total": 1
+  }
+}
+```
 # Notes
 [Macros pattern](https://tighten.co/blog/the-magic-of-laravel-macros/) was used for the main function witch breakdown the interval given a time expression. It's extending the Carbon library with 2 new functions:
 - breakdownDiffArray
 - breakdownDiffJson
 
-Check out CarbonServiceProvider for more details
+Check out [CarbonServiceProvider](https://github.com/ghof/breakdowner/blob/master/app/Providers/CarbonServiceProvider.php) for more details
+#DEMO
+The demo server can be found [here](http://149.202.41.71/).
+Feel free to contact me for demo server client ID and secret at ghofrane.benhmida@gmail.com. 
 
-    
-https://docs.docker.com/engine/install/ubuntu/
-https://docs.docker.com/compose/install/
-
-git clone https://github.com/ghof/breakdowner.git
-
-
+#TODO
+- Implement CI/CD using github actions.
+- Setup production env.
+- Improve the docker files to make the use of apache/ nginx.
+- Commits on master should only be by merging PR's.
+- demo branch will be used for the demo server.
+- Create login/register forms.
+- Registered users can manage clientIds and secrets.
+- Create better API doc using swagger.
+- Setup [Stile Ci](https://styleci.io/) for the project.
